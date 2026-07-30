@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Yellow Dot - Jeu de Suivi Cognitif</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="signature">Designed by Twagirumukiza</div>
+    <div id="app">
+        <!-- Main Menu -->
+        <div id="screen-menu" class="screen">
+            <div class="menu-container">
+                <h1 class="game-title">YELLOW <span>DOT</span></h1>
+                <p class="game-subtitle">Mémoire visuelle & Object Tracking</p>
+                <div class="menu-buttons">
+                    <button id="btn-solo" class="btn primary">▶ Jouer Solo</button>
+                    <button id="btn-online" class="btn secondary">🌍 Jouer en ligne</button>
+                    <button id="btn-stats" class="btn">🏆 Statistiques</button>
+                    <button id="btn-rules" class="btn">❓ Règles</button>
+                    <button id="btn-settings" class="btn">⚙ Paramètres</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solo Setup Screen -->
+        <div id="screen-solo-setup" class="screen hidden">
+            <div class="setup-container">
+                <h2>Configuration Solo</h2>
+                <div class="setting-group">
+                    <label>Nombre de points :</label>
+                    <div class="pill-selector" id="select-dots">
+                        <button class="pill" data-val="8">8</button>
+                        <button class="pill" data-val="12">12</button>
+                        <button class="pill active" data-val="16">16</button>
+                        <button class="pill" data-val="20">20</button>
+                        <button class="pill" data-val="24">24</button>
+                        <button class="pill" data-val="30">30</button>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <label>Vitesse :</label>
+                    <div class="pill-selector" id="select-speed">
+                        <button class="pill" data-val="0.5">Très lente</button>
+                        <button class="pill" data-val="0.8">Lente</button>
+                        <button class="pill active" data-val="1.2">Normale</button>
+                        <button class="pill" data-val="1.8">Rapide</button>
+                        <button class="pill" data-val="2.5">Extrême</button>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <label>Temps d'observation (disparition du jaune) :</label>
+                    <div class="pill-selector" id="select-time">
+                        <button class="pill" data-val="1">1s</button>
+                        <button class="pill active" data-val="2">2s</button>
+                        <button class="pill" data-val="3">3s</button>
+                    </div>
+                </div>
+                <div class="menu-buttons horizontal">
+                    <button id="btn-solo-back" class="btn">↩ Retour</button>
+                    <button id="btn-solo-start" class="btn primary">Lancer la partie</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="screen-game" class="screen hidden">
+            <header id="game-header">
+                <button id="btn-home" class="icon-btn" title="Accueil">🏠</button>
+                <div class="game-info">
+                    <span id="info-level">Niveau : 1</span>
+                    <span id="info-score">Score : 0</span>
+                    <span id="info-status">Observez le point jaune...</span>
+                </div>
+                <div class="game-controls-top">
+                    <button id="btn-pause-toggle" class="icon-btn" title="Pause">⏸</button>
+                    <button id="btn-quit" class="icon-btn danger" title="Quitter">🚪</button>
+                </div>
+            </header>
+            <div id="canvas-container">
+                <canvas id="game-canvas"></canvas>
+                <button id="btn-stop" class="btn-stop hidden">STOP</button>
+            </div>
+        </div>
+
+        <!-- Online Lobby Screen -->
+        <div id="screen-online" class="screen hidden">
+            <div class="setup-container">
+                <h2>Multijoueur en Ligne</h2>
+                <div id="lobby-auth" class="lobby-section">
+                    <p>Entrez votre pseudo pour accéder aux salons :</p>
+                    <input type="text" id="input-username" placeholder="Votre pseudo..." maxlength="15">
+                    <button id="btn-login-online" class="btn primary">Connexion</button>
+                </div>
+                <div id="lobby-menu" class="lobby-section hidden">
+                    <div class="menu-buttons">
+                        <button id="btn-create-room" class="btn primary">Créer un salon</button>
+                    </div>
+                    <div class="room-list-container">
+                        <h3>Salons disponibles</h3>
+                        <div id="room-list">Chargement des salons...</div>
+                    </div>
+                </div>
+                <div id="lobby-room" class="lobby-section hidden">
+                    <h3 id="room-title">Salon de <span id="host-name"></span></h3>
+
+                    <!-- Host-only: choose the round settings for everyone in the room -->
+                    <div id="host-config" class="hidden">
+                        <div class="setting-group">
+                            <label>Nombre de points :</label>
+                            <div class="pill-selector" id="online-select-dots">
+                                <button class="pill" data-val="8">8</button>
+                                <button class="pill" data-val="12">12</button>
+                                <button class="pill active" data-val="16">16</button>
+                                <button class="pill" data-val="20">20</button>
+                                <button class="pill" data-val="24">24</button>
+                            </div>
+                        </div>
+                        <div class="setting-group">
+                            <label>Vitesse :</label>
+                            <div class="pill-selector" id="online-select-speed">
+                                <button class="pill" data-val="0.5">Très lente</button>
+                                <button class="pill" data-val="0.8">Lente</button>
+                                <button class="pill active" data-val="1.2">Normale</button>
+                                <button class="pill" data-val="1.8">Rapide</button>
+                                <button class="pill" data-val="2.5">Extrême</button>
+                            </div>
+                        </div>
+                        <div class="setting-group">
+                            <label>Temps d'observation :</label>
+                            <div class="pill-selector" id="online-select-time">
+                                <button class="pill" data-val="1">1s</button>
+                                <button class="pill active" data-val="2">2s</button>
+                                <button class="pill" data-val="3">3s</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="room-settings-summary" id="room-settings-box"></div>
+                    <div class="players-list-box">
+                        <h4>Joueurs dans le salon :</h4>
+                        <ul id="players-ul"></ul>
+                    </div>
+                    <div class="menu-buttons horizontal">
+                        <button id="btn-leave-room" class="btn danger">Quitter le salon</button>
+                        <button id="btn-start-room" class="btn primary hidden">Démarrer la partie</button>
+                    </div>
+                </div>
+                <div id="online-error" class="online-error hidden"></div>
+                <button id="btn-online-back" class="btn">↩ Retour au menu</button>
+            </div>
+        </div>
+
+        <!-- Stats Screen -->
+        <div id="screen-stats" class="screen hidden">
+            <div class="setup-container">
+                <h2>🏆 Statistiques</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-precision">0%</span>
+                        <span class="stat-label">Précision</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-avg-time">0.0s</span>
+                        <span class="stat-label">Temps moyen</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-streak">0</span>
+                        <span class="stat-label">Meilleure série</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-wins">0</span>
+                        <span class="stat-label">Victoires</span>
+                    </div>
+                </div>
+                <button id="btn-stats-back" class="btn">↩ Retour</button>
+            </div>
+        </div>
+
+        <!-- Rules Screen -->
+        <div id="screen-rules" class="screen hidden">
+            <div class="setup-container">
+                <h2>❓ Règles du jeu</h2>
+                <div class="rules-content">
+                    <p><strong>1. Observation :</strong> Au début de chaque manche, un point devient <strong>jaune</strong> pendant quelques secondes.</p>
+                    <p><strong>2. Suivi (Object Tracking) :</strong> Tous les points se mettent à bouger. Vous devez garder les yeux fixés sur le point initialement jaune.</p>
+                    <p><strong>3. Stop :</strong> Appuyez sur le bouton <strong>STOP</strong> dès que vous le souhaitez pour figer les mouvements.</p>
+                    <p><strong>4. Sélection :</strong> Cliquez sur le point que vous pensez être le bon. S'il s'illumine en vert, c'est gagné !</p>
+                </div>
+                <button id="btn-rules-back" class="btn">↩ Retour</button>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="screen-settings" class="screen hidden">
+            <div class="setup-container">
+                <h2>⚙ Paramètres</h2>
+                <div class="settings-list">
+                    <label class="toggle-row">
+                        <span>Musique</span>
+                        <input type="checkbox" id="setting-music" checked>
+                    </label>
+                    <label class="toggle-row">
+                        <span>Effets sonores</span>
+                        <input type="checkbox" id="setting-sfx" checked>
+                    </label>
+                    <label class="toggle-row">
+                        <span>Mode Sombre</span>
+                        <input type="checkbox" id="setting-dark" checked disabled>
+                    </label>
+                </div>
+                <button id="btn-settings-back" class="btn">↩ Retour</button>
+            </div>
+        </div>
+
+        <!-- Pause Modal -->
+        <div id="modal-pause" class="modal hidden">
+            <div class="modal-content">
+                <h2>Partie en Pause</h2>
+                <div class="menu-buttons">
+                    <button id="btn-resume" class="btn primary">▶ Reprendre</button>
+                    <button id="btn-abandon" class="btn danger">🏳 Abandonner</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/game.js"></script>
+</body>
+</html>
